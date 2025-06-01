@@ -1,0 +1,5 @@
+.idea/
+*.pt
+*.pkl
+*.lzma
+*.parquet
