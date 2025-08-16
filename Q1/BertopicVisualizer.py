@@ -13,31 +13,6 @@ class BERTopicVisualizer:
     def __init__(self, model_path="bertopic_model.pkl.lzma"):
         self.topic_model = joblib.load(model_path)
 
-    def display_top_topics(self, n_topics=15):
-        topic_info = self.topic_model.get_topic_info().head(n_topics)
-
-        print("=" * 100)
-        print(f"TOP {n_topics} TOPICS OVERVIEW")
-        print("=" * 100)
-
-        for index, row in topic_info.iterrows():
-            topic_id = row['Topic']
-            count = row['Count']
-
-            if topic_id == -1:
-                print(f"\nTopic #{topic_id} (Outliers) - Count: {count}")
-            else:
-                print(f"\nTopic #{topic_id} - Count: {count}")
-
-            # Get topic words and scores
-            topic_words = self.topic_model.get_topic(topic_id)
-
-            if topic_words:
-                print("Top 10 words:")
-                for i, (word, score) in enumerate(topic_words[:10], 1):
-                    print(f"  {i}. {word:<20} (score: {score:.4f})")
-            print("-" * 50)
-
     def create_wordcloud_grid(self, n_topics=15, save_path="topic_wordclouds.png"):
         cols = 5
         rows = (n_topics + cols - 1) // cols
@@ -54,24 +29,18 @@ class BERTopicVisualizer:
 
             if topic_words and topic_id != -1:
                 word_freq = {word: score for word, score in topic_words[:30] if score > 0}
+                wordcloud = WordCloud(
+                    width=400,
+                    height=300,
+                    background_color='white',
+                    colormap='viridis',
+                    relative_scaling=0.5,
+                    min_font_size=10
+                ).generate_from_frequencies(word_freq)
 
-                if word_freq:
-                    wordcloud = WordCloud(
-                        width=400,
-                        height=300,
-                        background_color='white',
-                        colormap='viridis',
-                        relative_scaling=0.5,
-                        min_font_size=10
-                    ).generate_from_frequencies(word_freq)
-
-                    axes[idx].imshow(wordcloud, interpolation='bilinear')
-                    axes[idx].set_title(f'Topic {topic_id}', fontsize=12, fontweight='bold')
-                    axes[idx].axis('off')
-                else:
-                    axes[idx].text(0.5, 0.5, f'Topic {topic_id}\n(No words)',
-                                   ha='center', va='center', transform=axes[idx].transAxes)
-                    axes[idx].axis('off')
+                axes[idx].imshow(wordcloud, interpolation='bilinear')
+                axes[idx].set_title(f'Topic {topic_id}', fontsize=12, fontweight='bold')
+                axes[idx].axis('off')
             else:
                 axes[idx].text(0.5, 0.5, f'Topic {topic_id}\n(Outliers)',
                                ha='center', va='center', transform=axes[idx].transAxes)
@@ -109,7 +78,7 @@ class BERTopicVisualizer:
 
         matrix = np.array(matrix)
 
-        plt.figure(figsize=(18, 12))
+        plt.figure(figsize=(24, 12))
         sns.heatmap(matrix,
                     xticklabels=all_words,
                     yticklabels=topic_labels,
@@ -226,8 +195,6 @@ class BERTopicVisualizer:
 
 if __name__ == '__main__':
     viz = BERTopicVisualizer()
-
-    viz.display_top_topics(n_topics=15)
 
     viz.create_wordcloud_grid(n_topics=15)
 

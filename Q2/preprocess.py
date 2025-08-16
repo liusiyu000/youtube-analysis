@@ -1,5 +1,3 @@
-import os.path
-
 import jsonlines
 import numpy as np
 import pandas as pd
@@ -16,15 +14,15 @@ class Preprocess:
         self.videos_df = None
         if sample:
             self.channel_path = r"F:\dissertationData\top_1000_df_channels_en.tsv"
-            self.timeseries_path = r"F:\dissertationData\top_1000_df_timeseries_en.tsv"
-            self.metadata_path = r"F:\dissertationData\top_1000_yt_metadata_en_money.jsonl"
+            self.metadata_path = r"F:\dissertationData\top_1000_yt_metadata_en_filtered_big.jsonl"
             self.comment_nums_path = r"F:\dissertationData\top_1000_num_comments.tsv"
+            self.timeseries_path = r"F:\dissertationData\top_1000_df_timeseries_en.tsv"
             self.save_path = "top_1000_popular_analysis.parquet"
         else:
             self.channel_path = r"F:\dissertationData\df_channels_en.tsv"
-            self.timeseries_path = r"F:\dissertationData\df_timeseries_en.tsv"
-            self.metadata_path = r"F:\dissertationData\yt_metadata_en_money.jsonl"
+            self.metadata_path = r"../Q1/money_related_content.jsonl"
             self.comment_nums_path = r"F:\dissertationData\num_comments.tsv"
+            self.timeseries_path = r"F:\dissertationData\df_timeseries_en.tsv"
             self.save_path = "popular_analysis.parquet"
 
 

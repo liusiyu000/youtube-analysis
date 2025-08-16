@@ -1,83 +1,53 @@
-import jsonlines, random, re, pathlib
-import multiprocessing as mp
-from functools import partial
+import argparse, json, random, sys
+from pathlib import Path
 
-input_path      = pathlib.Path("F:/dissertationData/yt_metadata_en.jsonl")
-output_all      = pathlib.Path("F:/dissertationData/yt_metadata_en_money.jsonl")
-output_sample50 = pathlib.Path("F:/dissertationData/yt_metadata_en_50k.jsonl")
-sample_size     = 50000
+TARGET_BYTES = 2 * 1024**3
+ENC = "utf-8"
+# TOTAL_LINES = 72,924,794
 
-
-intent_keywords = [
-    r"make money", r"earn money", r"income", r"invest", r"investment", r"trading", r"profit", r"forex",
-    r"side hustle", r"financial freedom", r"quit your job", r"stock", r"stocks", r"revenue",
-    r"ways to earn", r"how to make", r"btc", r"ethereum", r"finance", r"financial", r"wealth",
-    r"\b(make|earn|get)\s+\$?\d{3,}\b"
-]
-intent_pattern = re.compile("|".join(intent_keywords), re.I)
-
-strategy_keywords = [
-    r"affiliate marketing", r"clickbank", r"commission", r"online business",
-    r"crypto", r"bitcoin", r"ethereum", r"defi", r"web3",
-    r"day trading", r"options trading", r"swing trade",
-    r"dropshipping", r"shopify", r"print on demand",
-    r"\b(upwork|fiverr)\b", r"freelance client", r"remote gig"
-]
-strategy_pattern = re.compile("|".join(strategy_keywords), re.I)
-
-negative_keywords = [
-    r"instrumental", r"lyrics?", r"karaoke",
-    r"minecraft", r"roblox", r"fortnite", r"gta",
-    r"trailer", r"official video",
-    r"breaking news", r"podcast", r"film", r"cinema"
-]
-negative_pattern = re.compile("|".join(negative_keywords), re.I)
-
-# with input_path.open("r", encoding="utf-8") as fh:
-#     total_lines = sum(1 for _ in fh)
-# print(f"Total lines in file: {total_lines:,}")
-total_lines = 72924794
-
-sample_idx = set(random.sample(range(total_lines), sample_size))
-batch_size = 10000
-num_processes = mp.cpu_count()
-
-
-
-def check_match(args):
-    i, obj = args
-    text = (obj.get("title", "") + " " + obj.get("description", "") + " " + obj.get("tags", "")).lower()
-    if intent_pattern.search(text) and strategy_pattern.search(text) and not negative_pattern.search(text):
-        return i, obj
-    return None
-
-def process_batch(batch, pool):
-    results = pool.map(check_match, batch)
-    return [r for r in results if r is not None]
-
-def main():
+def build_sample(src, dst, prob, seed):
+    rng = random.Random(seed)
+    written = 0
     kept = 0
-    batch = []
 
-    with mp.Pool(num_processes) as pool:
-        with jsonlines.open(input_path) as reader, jsonlines.open(output_all,"w") as writer_all, jsonlines.open(output_sample50,"w") as writer_sample50:
-            for i, obj in enumerate(reader):
-                batch.append((i, obj))
-                if len(batch) >= batch_size or i == total_lines - 1:
-                    matched_items = process_batch(batch, pool)
-                    for idx, item in matched_items:
-                        writer_all.write(item)
-                        kept += 1
-                        if idx in sample_idx:
-                            writer_sample50.write(item)
-                    batch = []
+    with src.open("r", encoding=ENC) as fin, dst.open("w", encoding=ENC) as fout:
+        for ln, raw in enumerate(fin, 1):
+            if rng.random() > prob:
+                continue
+
+            try:
+                row = json.loads(raw)
+            except json.JSONDecodeError:
+                continue
+
+            row["__text__"] = "\n".join([
+                str(row.get("title", "")).strip(),
+                str(row.get("tags", "")).strip(),
+                str(row.get("description", "")).strip()
+            ]).strip()
+
+            out = json.dumps(row, ensure_ascii=False)
+            fout.write(out + "\n")
+
+            written += len(raw.encode(ENC))
+            kept += 1
+            if written >= TARGET_BYTES:
+                break
+
+            if ln % 10_000 == 0:
+                mb = written / 1024**2
+                print(f"...read {ln:,} lines, sample {mb:,.1f} MB", file=sys.stderr)
+
+    mb = written / 1024**2
+    print(f"finished: {kept:,} lines → {mb:,.1f} MB", file=sys.stderr)
 
 
-                if i % 100000 == 0:
-                    print(f"\rProgress: {i/total_lines*100:.2f}%", end="")
+if __name__ == "__main__":
+    p = argparse.ArgumentParser("2 GB sampler")
+    p.add_argument("--input",  type=Path, default= "F:\dissertationData\yt_metadata_en.jsonl", help="Input path")
+    p.add_argument("--output", type=Path, default="F:\dissertationData\yt_metadata_en_sample.jsonl", help="Output path")
+    p.add_argument("--prob", type=float, default=2/95, help="sampling probability per line")
+    p.add_argument("--seed", type=int, default=0, help="random seed")
+    args = p.parse_args()
 
-    print(f"\nKept {kept:,} money-making lines → {output_all.name}")
-
-if __name__ == '__main__':
-    mp.freeze_support()
-    main()
+    build_sample(args.input, args.output, args.prob, args.seed)

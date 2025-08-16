@@ -1,4 +1,0 @@
-Channel Data：channel，name_cc
-(Optional) Time Series Data: channel，datetime，delta_views，delta_subs，delta_videos（activity）
-video Metadata: channel id, description/Q1主题，like_count, display_id, view_count
-num_comments.tsv.gz: display_id, num_comms
