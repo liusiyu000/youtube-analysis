@@ -1,0 +1,56 @@
+D:\miniconda3\envs\py310\python.exe E:\Edinburgh\Course\dissertation\Programme\Q4\risk_detector.py 
+Loading feature table: (530889, 105)
+Weak label distribution:
+ label
+0    413847
+1    117042
+Name: count, dtype: int64
+Number of structural features: 85
+
+✓ Found the saved model file: risk_classifier_pack.xz
+→ Load the model, skipping the training step...
+→ load 5 model
+→ Global Threshold: 0.351
+
+→ Start full prediction...
+→ Risk label distribution:
+risk_label
+0    411731
+1    119158
+Name: count, dtype: int64
+→ Risk score statistics: mean=0.235, std=0.356, max=1.000
+
+→ risk video sample（risk_label=1）:
+Title: FIR - एफ. आई. आर. - Episode 384 - Jeeja Ki Saali 2
+Risk score: 1.000
+Rules triggering: exaggerate=0, emotion=0.00
+Video description: Click here to Subscribe to SAB TV Channel : https://www.youtube.com/user/sabtv?sub_confirmation=1
+Click to watch all the episodes of FIR - https://www.youtube.com/playlist?list=PL6Rtnh6YJK7b_uvjq89Qkc...
+--------------------------------------------------------------------------------
+Title: FIR - एफ. आई. आर. - Episode 279 - Gopi MBBS - Part 2
+Risk score: 1.000
+Rules triggering: exaggerate=0, emotion=0.00
+Video description: Click here to Subscribe to SAB TV Channel : https://www.youtube.com/user/sabtv?sub_confirmation=1
+Click to watch all the episodes of FIR - https://www.youtube.com/playlist?list=PL6Rtnh6YJK7b_uvjq89Qkc...
+--------------------------------------------------------------------------------
+Title: FIR - एफ. आई. आर. - Episode 278 - Gopi MBBS - Part 1
+Risk score: 1.000
+Rules triggering: exaggerate=0, emotion=0.00
+Video description: Click here to Subscribe to SAB TV Channel : https://www.youtube.com/user/sabtv?sub_confirmation=1
+Click to watch all the episodes of FIR - https://www.youtube.com/playlist?list=PL6Rtnh6YJK7b_uvjq89Qkc...
+--------------------------------------------------------------------------------
+Title: FIR - एफ. आई. आर. - Episode 383 - Jeeja Ki Saali
+Risk score: 1.000
+Rules triggering: exaggerate=0, emotion=0.00
+Video description: Click here to Subscribe to SAB TV Channel : https://www.youtube.com/user/sabtv?sub_confirmation=1
+Click to watch all the episodes of FIR - https://www.youtube.com/playlist?list=PL6Rtnh6YJK7b_uvjq89Qkc...
+--------------------------------------------------------------------------------
+Title: FIR - एफ. आई. आर. - Episode 412 - Maut Ki Tamanna 2
+Risk score: 1.000
+Rules triggering: exaggerate=0, emotion=0.00
+Video description: Click here to Subscribe to SAB TV Channel : https://www.youtube.com/user/sabtv?sub_confirmation=1
+Click to watch all the episodes of FIR - https://www.youtube.com/playlist?list=PL6Rtnh6YJK7b_uvjq89Qkc...
+--------------------------------------------------------------------------------
+✓ Saved result → video_features_with_risk.parquet
+
+进程已结束，退出代码为 0

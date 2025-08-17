@@ -1,0 +1,94 @@
+=== Descriptive Statistics Comparison ===
+
+Field: view_count
+Sample Dataset:
+  Count: 1538042
+  Mean: 122759.09
+  Std: 2539292.10
+  Min: 0.00
+  Max: 1358985585.00
+  Median: 2878.00
+Full Dataset:
+  Count: 72924140
+  Mean: 125237.61
+  Std: 3534488.22
+  Min: 0.00
+  Max: 6509934494.00
+  Median: 2845.00
+
+Field: like_count
+Sample Dataset:
+  Count: 1503670
+  Mean: 1296.32
+  Std: 19413.30
+  Min: 0.00
+  Max: 9956144.00
+  Median: 41.00
+Full Dataset:
+  Count: 71293336
+  Mean: 1306.76
+  Std: 20135.88
+  Min: 0.00
+  Max: 35287325.00
+  Median: 43.00
+
+Field: dislike_count
+Sample Dataset:
+  Count: 1503670
+  Mean: 75.01
+  Std: 1576.22
+  Min: 0.00
+  Max: 911589.00
+  Median: 2.00
+Full Dataset:
+  Count: 71293336
+  Mean: 76.09
+  Std: 3064.76
+  Min: 0.00
+  Max: 16916346.00
+  Median: 2.00
+
+Field: duration
+Sample Dataset:
+  Count: 1538056
+  Mean: 758.49
+  Std: 1824.88
+  Min: 1.00
+  Max: 95443.00
+  Median: 282.00
+Full Dataset:
+  Count: 72924794
+  Mean: 757.68
+  Std: 1820.11
+  Min: 1.00
+  Max: 360157.00
+  Median: 283.50
+
+Field: categories
+Sample Dataset:
+  Top 5 categories: [('Gaming', 288565), ('Entertainment', 259059), ('News & Politics', 187673), ('Music', 174804), ('People & Blogs', 146646)]
+  Unique categories: 17
+Full Dataset:
+  Top 5 categories: [('Gaming', 13720303), ('Entertainment', 12276397), ('News & Politics', 8881022), ('Music', 8305003), ('People & Blogs', 6910666)]
+  Unique categories: 18
+
+Total entries: Sample=1538056, Full=72924794
+
+=== KS Test for Distribution Similarity ===
+(p-value > 0.05 suggests distributions are similar)
+view_count:
+  KS statistic: 0.0089
+  p-value: 0.8233
+  -> Distributions are similar (fail to reject null hypothesis)
+like_count:
+  KS statistic: 0.0145
+  p-value: 0.2439
+  -> Distributions are similar (fail to reject null hypothesis)
+dislike_count:
+  KS statistic: 0.0075
+  p-value: 0.9412
+  -> Distributions are similar (fail to reject null hypothesis)
+duration:
+  KS statistic: 0.0084
+  p-value: 0.8722
+  -> Distributions are similar (fail to reject null hypothesis)

@@ -1,0 +1,74 @@
+[nltk_data] Downloading package stopwords to
+[nltk_data]     /afs/inf.ed.ac.uk/user/s27/s2751089/nltk_data...
+[nltk_data]   Package stopwords is already up-to-date!
+[nltk_data] Downloading package vader_lexicon to
+[nltk_data]     /afs/inf.ed.ac.uk/user/s27/s2751089/nltk_data...
+[nltk_data]   Package vader_lexicon is already up-to-date!
+[nltk_data] Downloading package words to
+[nltk_data]     /afs/inf.ed.ac.uk/user/s27/s2751089/nltk_data...
+[nltk_data]   Package words is already up-to-date!
+data shape: (530889, 25)
+             categories                channel_id                  crawl_date                                        description  dislike_count   display_id  duration  like_count                                               tags                                              title          upload_date  view_count  predicted_topic  prediction_prob  num_comms      name_cc           category_cc  subscribers_cc  videos_cc  channel_total_views  channel_activity  engagement_rate  like_rate  channel_avg_views_per_video  video_popularity_vs_subs
+0      Film & Animation  UCzWrhkg9eK5I8Bm3HfV-unA  2019-10-31 20:18:55.071096  Welcome toThe 2 min Nintendo Switch unboxing. ...            6.0  A7pfYxv9Vn0       146       260.0  nintengo switch,nintendo switch unboxing,ninte...  2 MINUTE NINTENDO SWITCH UNBOXING. Worth Every...  2017-03-06 00:00:00      7009.0                1         0.999538        4.0  Supertronic                Gaming          314000       2398         2.117582e+08               0.0         0.037666   0.037095                 88306.173240                  0.022322
+1  Science & Technology  UCzWQYUVCpZqtN93H8RR44Qw  2019-11-03 22:21:34.890880  We’ve mapped other planets to more detail than...          195.0  KoOxTV3QIrM       490      8828.0  ocean mapping,oceanography,Seabed 2030,Doug Mc...  How Close Are We to Completely Mapping the Ocean?  2018-11-24 00:00:00    350938.0                1         0.989466      746.0       Seeker  Science & Technology         4140000       3464         9.578796e+08              13.0         0.027281   0.025155                276524.123062                  0.084768
+2  Science & Technology  UCzWQYUVCpZqtN93H8RR44Qw  2019-11-03 22:21:52.681598  NASA's first disaster was a matter of poor des...           38.0  7DiWMvb2ei0       314      2282.0  space,NASA,Apollo,science,astronomy,space race...  Apollo’s First Manned Mission Was Live Streame...  2018-10-27 00:00:00     71266.0                1         0.990943      169.0       Seeker  Science & Technology         4140000       3464         9.578796e+08              13.0         0.034392   0.032021                276524.123062                  0.017214
+3  Science & Technology  UCzWQYUVCpZqtN93H8RR44Qw  2019-11-03 22:21:20.294897  The secrets to converting a twenty-meter racin...          106.0  4nEV76CpF6M       313      3656.0  seeker,education,science,curiosity,learn,teach...  This Is the Engineering You’d Need to Cross th...  2018-08-29 00:00:00    139447.0                1         0.991783      197.0       Seeker  Science & Technology         4140000       3464         9.578796e+08              13.0         0.027631   0.026218                276524.123062                  0.033683
+4  Science & Technology  UCzWQYUVCpZqtN93H8RR44Qw  2019-11-03 22:21:28.759661  With the help of artificial intelligence, the ...           57.0  -GWVmk-U-kk       346      2697.0  hydrophone,audio,marine mammals,dolphin,whale,...  Could the Biggest Ocean Recording Ever Made Re...  2018-08-13 00:00:00     71675.0                1         0.981914      134.0       Seeker  Science & Technology         4140000       3464         9.578796e+08              13.0         0.039498   0.037628                276524.123062                  0.017313
+==============Content style analysis==============
+==============Topic model by bertopic==============
+Discovered 6462 topics, the first 5 topics are:
+   Topic   Count                                               Name                                     Representation                                Representative_Docs
+0     -1  194112        -1_donate donate_mean_vocabulary_dictionary  [donate donate, mean, vocabulary, dictionary, ...  [old world pure mountain spring bamboo pipe dr...
+1      0    1951                        0_chicken_pork_sauce_recipe  [chicken, pork, sauce, recipe, fried, cooking,...  [easy chicken recipe easy simple delicious chi...
+2      1    1646          1_cinema_film_cinema cinema_film industry  [cinema, film, cinema cinema, film industry, a...  [sen dev hundred cinema celebration film actre...
+3      2    1077     2_major league_baseball_league_league baseball  [major league, baseball, league, league baseba...  [career take look back memorable major league ...
+4      3    1076  3_risk capital_risk disclosure_performance nec...  [risk capital, risk disclosure, performance ne...  [legal disclaimer full risk disclosure gap mov...
+topic keywords example: ['chicken, pork, sauce, recipe, fried, cooking, chicken recipe, garlic, grill, steak', 'cinema, film, cinema cinema, film industry, actor, film film, actress, cinema film, film fraternity, fraternity', 'major league, baseball, league, league baseball, home run, professional sports, major, baseball highlight, athletics, boston red']
+==============Correlation analysis==============
+==============Regression analysis==============
+training: view_nums stack model
+Found existing model: ./view_nums_ridge_95_stacking_model.pkl.lzma, R²: 0.5154572490112024
+training: like_nums stack model
+Found existing model: ./like_nums_ridge_95_stacking_model.pkl.lzma, R²: 0.596990372661999
+training: comment_nums stack model
+Found existing model: ./comment_nums_ridge_95_stacking_model.pkl.lzma, R²: 0.5712443953618704
+==============Visualization==============
+1. Top 100 videos perform distribution
+2. Style performance heat map per column...
+3. Feature importance compare
+4. Title feature impact
+5. Topic analysis
+6. Performance summary
+
+                  videos  views_avg  likes_avg  comments_avg  engage_avg
+content_styles                                                          
+prank               1406  344822.67    5337.08        586.82        0.02
+comedy             19040  254359.64    2890.79        326.83        0.01
+animation           9150  198568.32    2605.79        282.03        0.01
+pets_animals       13527  145079.43    1662.46        201.14        0.01
+documentary         9385  143585.16    2343.83        279.99        0.02
+dance               5205  120072.32    1277.22        120.01        0.01
+sports             36635  113559.28     990.86        116.91        0.01
+shorts              2106  113435.51    1453.85        146.85        0.01
+beauty_fashion     26139  109302.34    2215.51        241.75        0.02
+music              75929  106955.17    1753.43        205.10        0.02
+asmr                4357   96106.93    1391.84        170.87        0.02
+food_cooking       33175   92701.37    1562.32        187.91        0.02
+podcast            60702   90825.43     959.52        154.99        0.01
+challenge          17197   89909.77    1570.58        197.75        0.02
+reaction           10250   75789.46    1424.19        201.58        0.02
+vlog               20107   73918.06    2004.27        242.30        0.03
+unboxing           15777   68412.71    1141.13        187.39        0.02
+travel             29410   63943.40     992.42        145.49        0.02
+gaming             30484   61360.72    1067.52        157.36        0.02
+motivation         18987   58734.72    1159.00        136.46        0.02
+educational       101756   58681.68    1017.94        148.24        0.02
+howto             215984   50752.58     937.52        114.88        0.02
+product_review     89307   40579.80     860.76        137.39        0.02
+news              170286   36415.60     807.70        145.01        0.03
+qna                 6532   33542.87    1142.17        150.21        0.04
+fitness            44389   32007.91     544.91         69.36        0.02
+video_essay         6608   31601.00     551.17        103.77        0.02
+finance_business  318935   28446.08     563.08         86.95        0.02
+commentary         91423   21570.59     547.92        101.32        0.03
+live_stream        15540   19311.52     473.99         97.37        0.03
