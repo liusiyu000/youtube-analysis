@@ -555,6 +555,34 @@ class Analyser:
                         }
                         joblib.dump(model_package, f, compress=('xz', 9), protocol=5)
 
+
+    def identify_differential_features(self, threshold=0.03):
+
+        df_corr = self.style_performance_sub_matrix.copy()
+
+        df_corr_clean = df_corr.fillna(0)
+
+        differential_features = []
+        feature_differences = {}
+
+        for feature in df_corr_clean.index:
+            correlations = df_corr_clean.loc[feature].values
+
+            std_corr = np.std(correlations)
+
+            range_corr = np.max(correlations) - np.min(correlations)
+
+            feature_differences[feature] = {
+                'std': std_corr,
+                'range': range_corr,
+                'correlations': correlations
+            }
+
+            if std_corr > threshold or range_corr > 0.05:
+                differential_features.append(feature)
+
+        return differential_features, feature_differences
+
     def visualization(self):
         def top_100():
             print("1. Top 100 videos perform distribution")
@@ -612,6 +640,45 @@ class Analyser:
         def style_performance():
             print("2. Style performance heat map per column...")
 
+            differential_features, feature_differences = self.identify_differential_features(threshold=0.02)
+
+            # df_corr = self.style_performance_sub_matrix
+            # metrics = df_corr.columns
+            # n_metrics = len(metrics)
+            #
+            # fig, axes = plt.subplots(1, n_metrics, figsize=(6 * n_metrics, 24), sharey=True)
+            #
+            # for i, metric in enumerate(metrics):
+            #     data = df_corr[[metric]]
+            #     vmin = data.min().min()
+            #     vmax = data.max().max()
+            #     ax = axes[i]
+            #
+            #     sns.heatmap(data, annot=True, cmap='RdBu_r', center=0, fmt='.3f',
+            #                 vmin=vmin, vmax=vmax, cbar=True, ax=ax,
+            #                 linewidths=0.5, square=False)
+            #
+            #     y_labels = ax.get_yticklabels()
+            #     for j, label in enumerate(y_labels):
+            #         if label.get_text() in differential_features:
+            #             label.set_weight('bold')
+            #             label.set_color('red')
+            #             label.set_fontsize(13)
+            #
+            #     ax.set_xlabel('')
+            #     ax.tick_params(axis='x', labelsize=15)
+            #     if i == 0:
+            #         ax.set_ylabel('Content Style', fontsize=15)
+            #         ax.tick_params(axis='y', labelsize=15)
+            #     else:
+            #         ax.set_ylabel('')
+            #
+            # plt.suptitle('Correlation between content style and performance metrics\n',
+            #              fontsize=18, fontweight='bold')
+            # plt.tight_layout()
+            # plt.savefig('feature_correlation_per_column.png', dpi=600)
+            # plt.show()
+
             df_corr = self.style_performance_sub_matrix
             metrics = df_corr.columns
             n_metrics = len(metrics)
@@ -623,22 +690,42 @@ class Analyser:
                 vmin = data.min().min()
                 vmax = data.max().max()
                 ax = axes[i]
+
                 sns.heatmap(data, annot=True, cmap='RdBu_r', center=0, fmt='.3f',
                             vmin=vmin, vmax=vmax, cbar=True, ax=ax,
                             linewidths=0.5, square=False)
-                # ax.set_title(metric, fontsize=15, fontweight='bold')
+
+                y_labels = []
+                for label in ax.get_yticklabels():
+                    feature_name = label.get_text()
+                    if feature_name in differential_features:
+                        new_label = ax.text(
+                            label.get_position()[0],
+                            label.get_position()[1],
+                            feature_name,
+                            fontsize=13,
+                            fontweight='bold',
+                            color='red',
+                            ha='right',
+                            va='center'
+                        )
+                        label.set_visible(False)  # 隐藏原标签
+                    else:
+                        label.set_fontsize(12)
+                        label.set_color('black')
+
                 ax.set_xlabel('')
                 ax.tick_params(axis='x', labelsize=15)
                 if i == 0:
-                    ax.set_ylabel('content style', fontsize=15)
-                    ax.tick_params(axis='y', labelsize=15)
+                    ax.set_ylabel('Content style', fontsize=15)
                 else:
                     ax.set_ylabel('')
 
-            plt.suptitle('Correlation between content style and each performance metric',
+            plt.suptitle('Correlation between content style and performance metrics',
                          fontsize=18, fontweight='bold')
             plt.tight_layout()
-            plt.savefig('feature_correlation_per_column.png', dpi=600)
+
+            plt.savefig('feature_correlation_per_column.png', dpi=600, bbox_inches='tight')
             plt.show()
 
         def feature_imp():
@@ -902,14 +989,14 @@ class Analyser:
                 plt.savefig('model_performance_summary.png', dpi=600)
                 plt.show()
 
-        # top_100()
+        top_100()
         style_performance()
-        # feature_imp()
-        # title_impact()
-        # if not SAMPLE:
-        #     topic_analysis()
-        # performance_summary()
-        # self.style_overview()
+        feature_imp()
+        title_impact()
+        if not SAMPLE:
+            topic_analysis()
+        performance_summary()
+        self.style_overview()
 
     def style_overview(self):
         long_df = self.df.explode("content_styles").dropna(subset=["content_styles"])
@@ -926,16 +1013,18 @@ class Analyser:
         )
 
         metrics_to_plot = {
-            "views_avg":    ("Average views",   "style_avg_views.png",    "Blues_d"),
-            "likes_avg":    ("Average likes",   "style_avg_likes.png",    "Reds_d"),
-            "comments_avg": ("Average comments",  "style_avg_comments.png", "Purples_d"),
+            "views_avg": ("Average views", "style_avg_views.png", "Blues_d"),
+            "likes_avg": ("Average likes", "style_avg_likes.png", "Reds_d"),
+            "comments_avg": ("Average comments", "style_avg_comments.png", "Purples_d"),
         }
 
-        fig, axes = plt.subplots(1, 3, figsize=(24 , max(5, 0.4 * len(style_stats))))
+        fig, axes = plt.subplots(1, 3, figsize=(24, max(5, 0.4 * len(style_stats))))
         style_stats_reset = style_stats.reset_index()
 
         for ax, (m_col, (m_title, fname, palette)) in zip(axes, metrics_to_plot.items()):
-            sns.barplot(data=style_stats_reset,
+            sorted_data = style_stats_reset.sort_values(by=m_col, ascending=False)
+
+            sns.barplot(data=sorted_data,
                         y="content_styles", x=m_col,
                         palette=palette, edgecolor="black", ax=ax)
             ax.set_title(f"{m_title}", fontsize=15, fontweight="bold")
@@ -977,11 +1066,11 @@ if __name__ == '__main__':
         analyser.content_style()
         if not SAMPLE:
             print("==============Topic model by bertopic==============")
-            # analyser.content_topic()
+            analyser.content_topic()
     analyser.select_features()
     print("==============Correlation analysis==============")
     analyser.correlation_analysis()
     print("==============Regression analysis==============")
-    # analyser.regression_analysis()
+    analyser.regression_analysis()
     print("==============Visualization==============")
     analyser.visualization()

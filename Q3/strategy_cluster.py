@@ -146,9 +146,16 @@ class RevenueAnalyzer:
             except Exception:
                 return ""
 
+        url_shorteners = {
+            'bit.ly', 'goo.gl', 'tinyurl.com', 'ow.ly', 'is.gd',
+            't.co', 'buff.ly', 'j.mp', 'bitly.com', 'short.link',
+            'smarturl.it', 'tiny.cc', 'linktr.ee', 'rebrand.ly',
+            'geni.us'
+        }
         all_links = self.df_videos["links"].explode().dropna()
         domains = all_links.apply(extract_domain)
-        self.platform_counts = domains.value_counts().to_dict()
+        domains_filtered = domains[~domains.isin(url_shorteners)]
+        self.platform_counts = domains_filtered.value_counts().to_dict()
 
     def channel_analysis(self):
         print("Channel level analysis...")
